@@ -35,12 +35,9 @@ public class MuServerApplication {
                 .withHttpPort(8080)
                 .start();
 
-        MuServerUtil.setMuServer(server);
-
         System.out.println("Started server at " + server.uri());
 
         //load the currency from local file when starting up
-
         String file = ".\\src\\currency.txt";
         CurrencyService.loadFromFile(file);
 

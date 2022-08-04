@@ -6,20 +6,23 @@ import com.practice.util.ThreadPoolUtil;
 import io.muserver.MuServer;
 import io.muserver.MuServerBuilder;
 import javafx.util.Pair;
+import sun.rmi.runtime.Log;
 
 import java.util.*;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ConsoleService {
+    private static final long sleep = 60_000;
+
     public static void handInputOfTerminal() {
         Scanner scanner = new Scanner(System.in);
         String scanLine = null;
         while ((scanLine = scanner.nextLine()) != null) {
             scanLine = scanLine.trim();
             if ("quit".equals(scanLine)) {
-                MuServer muServer = MuServerUtil.getMuServer();
                 ThreadPoolUtil.shutdownExecutor();
+                System.exit(-1);
                 break;
             }
             Pair<String, Long> pair = CurrencyParserUtil.parseInputLine(scanLine);
@@ -47,7 +50,7 @@ public class ConsoleService {
                 System.out.println("console display once per one minute:");
                 consoleList.forEach(str -> System.out.println(str));
                 try {
-                    Thread.sleep(10_000);
+                    Thread.sleep(sleep);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
