@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.Currency;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MuServerApplication {
@@ -27,7 +29,9 @@ public class MuServerApplication {
                 .addHandler(Method.GET, "/sse/currency", (request, response, pathParams) -> {
 
                     SsePublisher publisher = SsePublisher.start(request, response);
-                    new Thread(() -> currency(publisher,request)).start();
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    Thread thread = new Thread(() -> currency(publisher, request));
+                    executorService.submit(thread);
                 }).addHandler(RestHandlerBuilder.restHandler(currencyHandler)
                     .addCustomWriter(new JacksonJaxbJsonProvider())
                     .addCustomReader(new JacksonJaxbJsonProvider())
